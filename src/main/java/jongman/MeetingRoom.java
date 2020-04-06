@@ -36,11 +36,56 @@ public class MeetingRoom {
         }
         return adj;
     }
+
+    List<Integer> sccId = new ArrayList<>();
+    List<Integer> discovered = new ArrayList<>();
+    int sccCounter = 0;
+    int vertextCounter = 0;
+    Stack<Integer> st = new Stack<>();
+
+    public int scc(int here, List<List<Integer>> adj) {
+        int ret =  vertextCounter;
+        discovered.set(here, ret);
+        vertextCounter++;
+        st.push(here);
+        for (int i = 0; i < adj.get(here).size(); ++i) {
+            int there = adj.get(here).get(i);
+            if (discovered.get(there) == -1) {
+                ret = Math.min(ret, scc(there, adj));
+            } else if(sccId.get(there) == -1) {
+                ret = Math.min(ret, discovered.get(there));
+            }
+        }
+        if (ret == discovered.get(here)) {
+            while(true) {
+                int t = st.lastElement();
+                st.pop();
+                sccId.set(t, sccCounter);
+                if (t == here) break;
+            }
+            ++sccCounter;
+        }
+        return ret;
+    }
+
+    public List<Integer> tarjanSCC(List<List<Integer>> adj) {
+        for (int i = 0; i < adj.size(); i++) {
+            sccId.add(-1);
+            discovered.add(-1);
+        }
+        for (int i = 0; i < adj.size(); i++) {
+            if (discovered.get(i) == -1) {
+                scc(i, adj);
+            }
+        }
+        return sccId;
+    }
+
     public List<Boolean> solve2SAT(List<List<Integer>> adj) {
         int n = adj.size() / 2;
-        List<Integer> label = tarjanSCC();
+        List<Integer> label = tarjanSCC(adj);
         for (int i = 0; i < 2 * n; i += 2) {
-            if (label.get(i) == label.get(i + 1)) return new ArrayList<>();
+            if (label.get(i).equals(label.get(i + 1))) return new ArrayList<>();
         }
 
         List<Boolean> value = new ArrayList<>();
