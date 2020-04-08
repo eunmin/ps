@@ -96,7 +96,7 @@ public class MeetingRoom {
         for (int i = 0; i < 2 * n; i++) {
             order.add(new Pair(-1 * label.get(i), i));
         }
-        // Collections.sort();
+//         Collections.sort(order);
         for (int i = 0; i < 2 * n; ++i) {
             int vertex = order.get(i).second;
             int variable = vertex / 2;
