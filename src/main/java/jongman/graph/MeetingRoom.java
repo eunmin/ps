@@ -1,4 +1,4 @@
-package jongman;
+package jongman.graph;
 
 import java.util.*;
 
